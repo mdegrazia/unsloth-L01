@@ -2010,6 +2010,14 @@ else
     verbose_substep "python deps check: installed=$_PKG_NAME@${INSTALLED_VER:-unknown} latest=${LATEST_VER:-unknown}"
 fi
 
+# FOR563 fix: pin a wandb version that matches the installed protobuf
+# (avoids "cannot import name 'Imports' from wandb.proto.wandb_telemetry_pb2")
+if [ "$_COLAB_NO_VENV" = true ]; then
+    pip install -q --upgrade wandb
+else
+    "$VENV_DIR/bin/pip" install -q --upgrade wandb
+fi
+
 # ── 6b. Pre-install transformers 5.x into .venv_t5_530/, .venv_t5_550/, and .venv_t5_510/ ──
 # Models like GLM-4.7-Flash, Qwen3 MoE need transformers>=5.3.0.
 # Gemma 4 models need transformers>=5.5.0; Gemma 4 Unified needs 5.10.x.
