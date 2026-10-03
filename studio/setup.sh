@@ -2018,6 +2018,15 @@ else
     "$VENV_DIR/bin/pip" install -q --upgrade wandb
 fi
 
+# FOR563 fix: downgrade trl below 0.20 to avoid SFTConfig max_seq_length error
+# (Studio's own code still passes the old kwarg name; installed outside any
+# constraints file so it isn't blocked by the trl==0.23.1 pin)
+if [ "$_COLAB_NO_VENV" = true ]; then
+    pip install -q "trl<0.20"
+else
+    "$VENV_DIR/bin/pip" install -q "trl<0.20"
+fi
+
 # ── 6b. Pre-install transformers 5.x into .venv_t5_530/, .venv_t5_550/, and .venv_t5_510/ ──
 # Models like GLM-4.7-Flash, Qwen3 MoE need transformers>=5.3.0.
 # Gemma 4 models need transformers>=5.5.0; Gemma 4 Unified needs 5.10.x.
